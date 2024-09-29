@@ -11,43 +11,47 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class UserController {
 
-	@Autowired
-	private UserService userService;
+    private final UserService userService;
 
-	@GetMapping("/")
-	public String ShowAllUsers(Model model) {
-		model.addAttribute("users", userService.getAllUsers());
-		return "index";
-	}
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-	@GetMapping("/add")
-	private String ShowAddUserFrom(Model model) {
-		model.addAttribute("user", new User());
-		return "add";
-	}
+    @GetMapping("/")
+    public String ShowAllUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "index";
+    }
 
-	@PostMapping("/add")
-	public String AddUser(@ModelAttribute("user") User user) {
-		userService.saveUser(user);
-		return "redirect:/";
-	}
+    @GetMapping("/add")
+    private String ShowAddUserFrom(Model model) {
+        model.addAttribute("user", new User());
+        return "add";
+    }
 
-	@GetMapping("/edit/{id}")
-	public String ShowEditUserForm(@PathVariable("id") int id, Model model) {
-		User user = userService.getUserById(id);
-		model.addAttribute("user", user);
-		return "edit";
-	}
+    @PostMapping("/add")
+    public String AddUser(@ModelAttribute("user") User user) {
+        userService.saveUser(user);
+        return "redirect:/";
+    }
 
-	@PostMapping("/edit")
-	public String EditUser(@ModelAttribute("user") User user) {
-		userService.updateUser(user);
-		return "redirect:/";
-	}
+    @GetMapping("/edit/{id}")
+    public String ShowEditUserForm(@PathVariable("id") int id, Model model) {
+        User user = userService.getUserById(id);
+        model.addAttribute("user", user);
+        return "edit";
+    }
 
-	@GetMapping("/delete/{id}")
-	public String DeleteUser(@PathVariable("id") int id) {
-		userService.deleteUser(id);
-		return "redirect:/";
-	}
+    @PostMapping("/edit")
+    public String EditUser(@ModelAttribute("user") User user) {
+        userService.updateUser(user);
+        return "redirect:/";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String DeleteUser(@PathVariable("id") int id) {
+        userService.deleteUser(id);
+        return "redirect:/";
+    }
 }
